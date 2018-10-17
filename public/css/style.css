@@ -1,0 +1,27 @@
+.navbar-default .navbar-brand.active{
+    color: limegreen !important;
+}
+
+table th .actions{
+    width: 80px;
+}
+
+table .inline{
+    display: inline-block;
+    float: left;
+    margin: 0 3px;
+}
+
+.container-function {
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.box-title{
+    position: relative;
+}
+
+.box-right{
+    position: absolute;
+    right: 0;top: 0;
+}
