@@ -14,7 +14,7 @@
             <div class="box-title">
                 <h3>Lista de categorías </h3>
                 <div class="box-right">                    
-                    <a href="" class="inline">
+                    <a href="{{ route('category.create') }}" class="inline">
                         <input class="btn btn-success btn-xs" type="button" value="Crear categoría">
                     </a>
                 </div>
@@ -35,10 +35,10 @@
                                     <td>{{ $data->name }}</td>
                                     <td>{{ $data->description }}</td>
                                     <td>
-                                        <a href="" class="inline">
+                                        <a href="{{ route('category.show', $data->id) }}" class="inline">
                                             <input class="btn btn-info btn-xs" type="button" value="Mostrar">
                                         </a>
-                                        <form method="POST" class="inline" action="">
+                                        <form method="POST" class="inline" action="{{ route('category.destroy', $data->id) }}">
                                             {!! method_field('DELETE'); !!}
                                             {!! csrf_field(); !!}
                                             <input class="btn btn-danger btn-xs" type="submit" value="Borrar">

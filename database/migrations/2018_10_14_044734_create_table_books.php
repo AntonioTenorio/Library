@@ -19,6 +19,7 @@ class CreateTableBooks extends Migration
             $table->string('author');
             $table->integer('category_id');
             $table->date('published_date');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

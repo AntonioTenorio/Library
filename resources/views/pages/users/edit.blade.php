@@ -72,16 +72,8 @@
 $(document).ready(function () { 
       
     @if ($errors->any())
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
         @foreach ($errors->all() as $error)
-            toastr.error('{{ $error }}','Error!');;
+            alert('{{ $error }}','Error!');;
         @endforeach
     @endif
     

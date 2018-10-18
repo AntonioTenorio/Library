@@ -13,6 +13,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @include('includes.css')
+       
+    @yield('pagescss')
 </head>
 <body>
     <div id="app">

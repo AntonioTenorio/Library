@@ -23,15 +23,24 @@ class BookController extends Controller
         'category_id.required'  => 'El campo categoría debe ser numérico',
         'published_date.required'  => 'El campo frcha de publicación es requerido'
     ];
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Books::latest()->paginate(2);
-        return view('pages.books.list',['books' => $books]);
+        if($request->has('filter')){
+            $books = Books::where('name', 'like', '%' . $request->filter . '%')
+                ->orWhere('author', 'like', '%' . $request->filter . '%')
+                ->latest()->paginate(10);
+
+            return view('pages.books.list',['books' => $books]);
+        }else{
+            $books = Books::latest()->paginate(10);
+            return view('pages.books.list',['books' => $books]);
+        }
     }
 
     /**
@@ -141,5 +150,25 @@ class BookController extends Controller
     {
         Books::where('id', $id)->delete();
         return redirect()->route('book.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function status(Request $request)
+    {
+        try {
+            $book = Books::where('id', $request->book_id)->first();
+
+            $book->status = $request->status;
+            $book->save();
+
+            return redirect()->route('book.index');
+        } catch (QueryException $e) {
+            return back()->with('error', $e->getMessage());
+        }  
     }
 }

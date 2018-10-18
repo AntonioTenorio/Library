@@ -31,20 +31,19 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Categoría</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="category_id" name="category_id">
-                                @foreach($categories as $data)
-                                <option value="{{ $data->id }}">{{ $data->name }}</option>
-                                @endforeach
-                            </select>
+                        <label class="col-sm-2 control-label">Categoría</label>                       
+                        <div class="col-sm-10">                            
+                            <div class="ui-widget">
+                                <input type="text" class="form-control" id="categories" name="categories" value="{{ old('categories') }}">
+                                <input type="hidden" id="category_id" name="category_id">
+                            </div>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Fecha de publicación</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="published_date" name="published_date" value="{{ old('published_date') }}">
+                            <input type="date" class="form-control" id="published_date" name="published_date" value="{{ old('published_date') }}">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -64,24 +63,40 @@
 
 @section('pagescript') 
 
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-$(document).ready(function () { 
-      
+    
+$( function() {
     @if ($errors->any())
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
         @foreach ($errors->all() as $error)
-            toastr.error('{{ $error }}','Error!');;
+            alert('{{ $error }}','Error!');;
         @endforeach
     @endif
-    
-});
+
+    var categories = [
+        @foreach($categories as $category)
+        {
+            value: {{$category->id}},
+            label: '{{$category->name}}'
+        }, 
+        @endforeach
+    ];
+
+
+    $("#categories").autocomplete({
+        source: categories,
+        select: function (event, ui) {
+			event.preventDefault();
+            $(this).val(ui.item.label);
+            $("#category_id").val(ui.item.value);
+        }
+    });
+} );
 </script>
 
+@stop  
+
+@section('pagescss') 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 @stop  

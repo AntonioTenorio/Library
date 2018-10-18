@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('type', 'user')->latest()->paginate(2);
+        $users = User::where('type', 'user')->latest()->paginate(10);
         return view('pages.users.list',['users' => $users]);
     }
 

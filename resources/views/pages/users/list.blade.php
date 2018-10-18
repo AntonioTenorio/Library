@@ -19,7 +19,7 @@
                         <input class="btn btn-success btn-xs" type="button" value="Crear Usuario">
                     </a>
                 </div>
-            </div>
+            </div> 
             <div class="ibox-content">
                 <div class="table-responsive">
                     <table class="table table-striped">

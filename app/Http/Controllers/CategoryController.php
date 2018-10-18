@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    public function __construct(Request $request)
-    {
-        $user = $request->user();
-        return redirect('http://www.google.com');
-        dd($user);
-        if(!isset($user)){
-            return redirect()->to('/');
-        }
-    }
+    protected $rules = [
+        'name' => 'required',
+        'description' => 'required',
+    ];
+    
+    protected $messages = [
+        'name.required' => 'El campo nombre de la categoría es requerido',
+        'description.required'  => 'El campo descripción es requerido'
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +25,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Categories::latest()->paginate(2);
+        $categories = Categories::latest()->paginate(10);
         return view('pages.categories.list',['categories' => $categories]);
     }
 
@@ -35,7 +36,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.categories.create');
     }
 
     /**
@@ -45,8 +46,25 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    { 
+        $validator = Validator::make($request->all(), $this->rules, $this->messages);
+
+        if($validator->fails()){
+            return back()->withErrors($validator);
+        }
+        
+        try {
+            $category = new Categories();
+
+            $category->name = $request->name;
+            $category->description = $request->description;
+
+            $category->save();
+
+            return redirect()->route('category.index');
+        } catch (QueryException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -57,7 +75,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Categories::where('id', $id)->first(); 
+        return view('pages.categories.show',['category' => $category]);
     }
 
     /**
@@ -68,7 +87,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Categories::where('id', $id)->first(); 
+        return view('pages.categories.edit',['category' => $category]);
     }
 
     /**
@@ -80,7 +100,24 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), $this->rules, $this->messages);
+
+        if($validator->fails()){
+            return back()->withErrors($validator);
+        }
+        
+        try {
+            $category = Categories::where('id', $id)->first();
+
+            $category->name = $request->name;
+            $category->description = $request->description;
+
+            $category->save();
+
+            return redirect()->route('category.index');
+        } catch (QueryException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -91,6 +128,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Categories::where('id', $id)->delete();
+        return redirect()->route('category.index');
     }
 }
